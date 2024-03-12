@@ -70,6 +70,15 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   let userReview = req.query.review;
   if (isbn in books) {
     review = books[isbn].reviews;
+    for (let r of review) {
+      if (r.user == req.user.uname) {
+        console.log("Found user!");
+        r.message = userReview;
+        return res
+          .status(200)
+          .json({ message: `Review updated for ${r.user}` });
+      }
+    }
     review.push({ user: req.user.uname, message: userReview });
     return res.status(200).json({ message: userReview });
   }
